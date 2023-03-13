@@ -1,11 +1,11 @@
-import Gun, { IGunChain, IGunUserInstance } from "gun";
+import { IGunChain, IGunUserInstance } from "gun";
+import Gun from "gun/gun";
 import "gun/sea";
 import { always, compose, ifElse, isNil, not, prop } from "ramda";
 import { MemoryStream, Stream } from "xstream";
 import { adapt } from "@cycle/run/lib/adapt"
 
 const { of: just, createWithMemory } = Stream;
-export const noop = always(undefined)
 
 export interface GunSource {
   user$: Stream<IGunUserInstance>
@@ -70,7 +70,7 @@ export const makeGunDriver = (peers: string[] = defaultPeers) => (stream$: Strea
         user.auth(sink.payload.username, sink.payload.password, ifElse(
           isError,
           (error: Record<string, any>) => error$.shamefullySendNext(error.err),
-          noop
+          always(null)
         ));
       }
 
