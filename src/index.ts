@@ -1,9 +1,8 @@
-import { IGunChain, IGunUserInstance } from "gun";
+import {IGunChain, IGunUserInstance} from "gun";
 import Gun from "gun/gun";
 import "gun/sea";
-import { always, compose, ifElse, isNil, not, prop } from "ramda";
-import { MemoryStream, Stream } from "xstream";
-import { adapt } from "@cycle/run/lib/adapt"
+import {always, compose, ifElse, isNil, not, prop} from "ramda";
+import {MemoryStream, Stream} from "xstream";
 
 const { of: just, createWithMemory } = Stream;
 
@@ -47,9 +46,9 @@ export const makeGunDriver = (peers: string[] = defaultPeers) => (stream$: Strea
   const gun = new Gun({ peers });
   const user = gun.user();
   user.recall({ sessionStorage: true }) // remember me token
-  const user$ = adapt(createWithMemory<IGunUserInstance>().startWith(user))
-  const error$ = adapt(createWithMemory<string>())
-  const signUp$ = adapt(createWithMemory<boolean>())
+  const user$ = createWithMemory<IGunUserInstance>().startWith(user)
+  const error$ = createWithMemory<string>()
+  const signUp$ = createWithMemory<boolean>()
 
   gun.on("auth", (_) => {
     user$.shamefullySendNext(user)

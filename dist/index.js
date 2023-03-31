@@ -2,7 +2,6 @@ import Gun from "gun/gun";
 import "gun/sea";
 import { always, compose, ifElse, isNil, not, prop } from "ramda";
 import { Stream } from "xstream";
-import { adapt } from "@cycle/run/lib/adapt";
 const { of: just, createWithMemory } = Stream;
 const isMakeUser = (sink, payload) => sink.action === "make-user";
 const isSignIn = (sink, payload) => sink.action === "sign-in";
@@ -14,9 +13,9 @@ export const makeGunDriver = (peers = defaultPeers) => (stream$) => {
     const gun = new Gun({ peers });
     const user = gun.user();
     user.recall({ sessionStorage: true }); // remember me token
-    const user$ = adapt(createWithMemory().startWith(user));
-    const error$ = adapt(createWithMemory());
-    const signUp$ = adapt(createWithMemory());
+    const user$ = createWithMemory().startWith(user);
+    const error$ = createWithMemory();
+    const signUp$ = createWithMemory();
     gun.on("auth", (_) => {
         user$.shamefullySendNext(user);
         error$.shamefullySendNext("");
